@@ -1,0 +1,38 @@
+/* Mi rutina comparte la paleta, los tamaños de lectura y el área segura de I Wish. */
+.agenda-create-actions{display:grid;gap:8px;min-width:180px}
+.agenda-create-actions>button{width:100%;justify-content:center}
+#open-routines{display:flex;justify-content:space-between;gap:16px}
+.routine-heading,.routine-detail-heading{display:flex;align-items:flex-start;justify-content:space-between;gap:24px;flex-wrap:wrap;margin-bottom:24px}
+.routine-heading .eyebrow{margin-top:28px}.routine-heading h2{font:600 clamp(2rem,4vw,2.75rem)/1.15 'Cormorant Garamond',Georgia,serif;margin:0}
+.routine-heading>.btn{align-self:center}
+.routine-cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+.routine-card{min-width:0;border:1px solid var(--line);border-radius:18px;padding:22px;background:var(--surface)}
+.routine-card h3,.routine-detail-heading h3,.routine-review h3{font:600 1.75rem/1.25 'Cormorant Garamond',Georgia,serif;margin:16px 0 10px}
+.routine-card-meta{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;font-size:.875rem;color:var(--muted)}
+.routine-card .btn{margin:4px 4px 0 0}.routine-card p{line-height:1.6}
+.routine-legacy-heading{border-top:1px solid var(--line);margin:36px 0 20px;padding-top:20px}
+.routine-empty{padding:40px 0;max-width:36rem}.routine-empty h3{font:600 2rem/1.2 'Cormorant Garamond',Georgia,serif}.routine-empty p{color:var(--muted);line-height:1.7}
+.routine-detail-heading{margin-top:26px}.routine-detail-heading h3{margin-top:8px}
+.routine-week-controls{display:flex;flex-wrap:wrap;gap:12px;align-items:end;margin:26px 0 16px}.routine-week-controls label{max-width:220px}
+.routine-pattern{border-block:1px solid var(--line);padding:10px 0}.routine-pattern>summary{padding:14px 0;cursor:pointer;font-weight:600}
+.routine-week{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0;margin:16px 0;border-top:1px solid var(--line)}
+.routine-day{min-width:0;padding:16px 16px 16px 0;border-bottom:1px solid var(--line)}.routine-day h4{margin:0 0 12px;font-size:.9rem}.routine-day>div{display:grid;gap:4px;border-left:3px solid var(--berry);padding-left:10px;margin-top:12px}.routine-day time{font-size:.875rem;color:var(--berry);font-weight:600}.routine-day span{line-height:1.5;overflow-wrap:anywhere}.routine-day>p{font-size:.875rem}
+.routine-note{color:var(--muted);font-size:.875rem;line-height:1.65;margin:24px 0 12px;max-width:70ch}
+#routine-dialog{width:min(780px,calc(100vw - 24px));padding:0;border:1px solid var(--line);border-radius:24px;background:var(--surface);color:var(--ink);max-height:calc(100dvh - 32px - env(safe-area-inset-top) - env(safe-area-inset-bottom));overflow:auto;overscroll-behavior:contain}
+#routine-dialog::backdrop{background:rgba(0,0,0,.45)}
+#routine-wizard{padding:28px;min-width:0}
+.routine-dialog-head h2{font:600 2rem/1.15 'Cormorant Garamond',Georgia,serif;margin:8px 0 24px}
+.routine-steps{list-style:none;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;padding:0;margin:0 0 24px;counter-reset:step}
+.routine-steps li{counter-increment:step;padding:10px 0;border-bottom:2px solid var(--line);font-size:.875rem;color:var(--muted);overflow-wrap:anywhere}.routine-steps li::before{content:counter(step) '. ';font-variant-numeric:tabular-nums}.routine-steps li[aria-current]{color:var(--berry);font-weight:700;border-color:var(--berry)}
+.routine-intro{color:var(--muted);line-height:1.6;margin-bottom:20px}.routine-fields{display:grid;gap:18px}.routine-field-row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}.routine-fields label,.routine-field-row label,.routine-activity-fields>label{display:grid;gap:8px;font-size:.95rem;min-width:0}
+#routine-wizard input,#routine-wizard select,#routine-wizard textarea{width:100%;min-width:0;max-width:100%;font-size:1rem}#routine-wizard input[readonly]{background:var(--surface-2)}
+.routine-date-result{background:var(--surface-2);border-radius:12px;padding:14px 16px;font-size:.95rem;line-height:1.5;margin:0}
+.routine-wizard-actions{border-top:1px solid var(--line);padding-top:20px;margin-top:24px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}.routine-wizard-actions>div{display:flex;gap:10px;flex-wrap:wrap}
+#routine-error{color:var(--red);line-height:1.6}#routine-error:empty{display:none}
+.routine-activity-row{display:flex;justify-content:space-between;gap:16px;align-items:center;border-bottom:1px solid var(--line);padding:16px 0;flex-wrap:wrap}.routine-activity-row>div{min-width:0}.routine-activity-row p{color:var(--muted);font-size:.875rem;margin:6px 0 0}.routine-activity-row .btn{padding:8px 12px;min-height:44px}
+.routine-activity-fields{display:grid;gap:18px;border:1px solid var(--line);border-radius:16px;padding:20px;margin:24px 0}.routine-activity-fields>legend{font-weight:600;padding:0 8px}
+.routine-days{border:0;padding:0;min-width:0}.routine-days>legend{font-size:.95rem;margin-bottom:10px}.routine-days>div{display:flex;gap:8px;flex-wrap:wrap}.routine-days label{position:relative;min-width:52px;flex:1}.routine-days input{position:absolute;opacity:0;inset:0}.routine-days label>span{display:grid;place-items:center;border:1px solid var(--line);border-radius:10px;min-height:48px;padding:8px;font-size:.9rem;cursor:pointer}.routine-days input:checked+span{background:var(--cta);color:var(--cta-ink);border-color:var(--cta);font-weight:700}.routine-days input:focus-visible+span{outline:3px solid var(--berry);outline-offset:3px}
+#routine-dialog .sr-only{position:absolute;width:1px;height:1px;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap}
+#routine-view .btn,#routine-wizard .btn{min-height:44px;white-space:normal}.routine-review p{line-height:1.6}
+@media(max-width:760px){.agenda-create-actions{width:100%}.routine-cards{grid-template-columns:1fr}.routine-heading{gap:16px}.routine-heading>.btn{width:100%}.routine-week{grid-template-columns:repeat(2,minmax(0,1fr))}.routine-card{padding:18px}.routine-field-row{grid-template-columns:1fr}#routine-wizard{padding:20px 16px}.routine-activity-fields{padding:16px 12px}.routine-steps{gap:8px}.routine-steps li{font-size:.8rem}.routine-wizard-actions>div{flex:1;justify-content:flex-end}.routine-wizard-actions .btn{padding:12px}.routine-week-controls{gap:8px}.routine-week-controls .btn{padding:12px}.routine-week-controls label{flex:1;min-width:145px}}
+@media(prefers-reduced-motion:reduce){#routine-view *,#routine-dialog *{scroll-behavior:auto;transition:none}}

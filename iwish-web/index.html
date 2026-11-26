@@ -1,0 +1,386 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#f7f5ef">
+  <meta name="description" content="I Wish: deseos, agenda y economía personal en un solo lugar.">
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="appearance.js"></script>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="planner.css">
+  <link rel="stylesheet" href="experience.css">
+  <link rel="stylesheet" href="routine.css">
+  <title>I Wish</title>
+</head>
+<body class="welcome-active">
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <section id="welcome-screen" class="welcome-screen" aria-labelledby="welcome-name">
+    <div class="welcome-content">
+      <p class="welcome-star" aria-hidden="true">✦</p>
+      <h1 id="welcome-name" class="welcome-name">I <strong>Wish</strong></h1>
+      <p class="welcome-subtitle">Disfruta de tu espacio</p>
+      <figure class="welcome-scripture">
+        <blockquote id="welcome-verse">“Todo lo puedo en Cristo que me fortalece.”</blockquote>
+        <figcaption><a id="welcome-reference" href="https://ebible.org/spaRV1909/PHP04.htm#V13" target="_blank" rel="noopener noreferrer">Filipenses 4:13</a><span class="welcome-version">Reina-Valera 1909</span></figcaption>
+      </figure>
+      <button id="welcome-enter" class="btn welcome-enter" type="button" disabled aria-busy="true">Wishes <span aria-hidden="true">→</span></button>
+      <noscript><p class="subtle">Activa JavaScript para entrar a I Wish.</p></noscript>
+    </div>
+  </section>
+
+  <section id="auth-view" class="auth-shell hidden" aria-labelledby="auth-title">
+    <div class="auth-mark" aria-hidden="true">✦</div>
+    <div class="brand brand-large">i <strong>wish</strong></div>
+    <p class="auth-kicker">Tu vida, en orden</p>
+    <div class="auth-card" id="auth-entry">
+      <h1 id="auth-title">Entra a tu espacio</h1>
+      <p>Usa la misma cuenta en tu celular y computadora.</p>
+      <form id="auth-form" aria-describedby="auth-error">
+        <p id="auth-error" class="form-error" role="alert" tabindex="-1"></p>
+        <label id="auth-name-field" class="hidden">Nombre de usuario
+          <input id="auth-name" type="text" autocomplete="nickname" minlength="2" maxlength="40" disabled placeholder="¿Cómo quieres que te llamemos?" aria-describedby="auth-name-help">
+          <small id="auth-name-help">Usa tu nombre o un apodo. Podrás cambiarlo en Ajustes.</small>
+        </label>
+        <label>Correo
+          <input id="auth-email" type="email" autocomplete="email" required placeholder="tu@correo.com">
+        </label>
+        <label>Contraseña
+          <input id="auth-password" type="password" autocomplete="current-password" minlength="6" required placeholder="Mínimo 6 caracteres">
+        </label>
+        <button id="auth-submit" class="btn primary" type="submit">Iniciar sesión</button>
+      </form>
+      <button id="auth-toggle" class="btn signup-invite" type="button">Crear mi cuenta</button>
+      <p class="auth-new-note" id="auth-new-note">¿Es tu primera vez en I Wish?</p>
+      <button id="offline-entry" class="text-btn muted" type="button">Continuar sin conexión</button>
+    </div>
+    <div id="auth-confirmation" class="auth-card confirmation-card hidden" aria-labelledby="confirmation-title">
+      <span class="confirmation-mark" aria-hidden="true">✉</span>
+      <p class="eyebrow">Un paso más</p>
+      <h1 id="confirmation-title" tabindex="-1">Confirma tu correo electrónico</h1>
+      <p>Revisa la bandeja de entrada de <strong id="confirmation-email"></strong> y abre el enlace de confirmación para activar tu cuenta.</p>
+      <p class="subtle">Puedes usar Gmail, Outlook o tu aplicación de correo habitual. Si no encuentras el mensaje, revisa Spam o Correo no deseado y espera unos minutos.</p>
+      <button id="confirmation-login" class="btn primary" type="button">Ya confirmé · Iniciar sesión</button>
+      <button id="confirmation-resend" class="btn secondary" type="button">Reenviar correo</button>
+      <p id="confirmation-status" class="subtle" role="status" aria-live="polite"></p>
+      <button id="confirmation-back" class="text-btn" type="button">Corregir mi correo</button>
+      <p class="subtle confirmation-note">Si ya tenías una cuenta, inicia sesión con ella.</p>
+    </div>
+  </section>
+
+  <div id="app" class="app-shell hidden">
+    <aside class="sidebar">
+      <div class="sidebar-brand">
+        <span class="mini-mark">✦</span>
+        <span class="brand">i <strong>wish</strong></span>
+      </div>
+      <nav class="side-nav" aria-label="Navegación principal">
+        <button class="nav-item active" data-route="home"><span>⌂</span> Inicio</button>
+        <button class="nav-item" data-route="wishes"><span>✦</span> Deseos</button>
+        <button class="nav-item" data-route="agenda"><span>□</span> Agenda</button>
+        <button class="nav-item" data-route="finance"><span>$</span> Economía</button>
+        <button class="nav-item" data-route="journal"><span>▤</span> Diario</button>
+        <button class="nav-item" data-route="settings"><span>⚙</span> Ajustes</button>
+      </nav>
+      <div class="sync-card">
+        <span id="sync-dot" class="status-dot"></span>
+        <div><strong id="sync-title">Guardado local</strong><small id="sync-copy">Tus cambios están seguros aquí</small></div>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div>
+          <p id="today-label" class="eyebrow"></p>
+          <h1 id="page-title">Mi día</h1>
+        </div>
+        <div class="top-actions">
+          <button id="theme-toggle" class="icon-btn" aria-label="Cambiar tema">☾</button>
+          <button id="settings-toggle" class="icon-btn" type="button" data-route="settings" aria-label="Abrir Ajustes" title="Ajustes"><span aria-hidden="true">⚙</span></button>
+        </div>
+      </header>
+
+      <section id="page-home" class="page active">
+        <div class="welcome-row">
+          <div>
+            <p class="serif-lead" id="greeting">Bienvenido a tu espacio.</p>
+            <p class="subtle" id="day-summary">Aquí tienes lo importante de hoy.</p>
+            <button id="complete-profile" class="text-btn hidden" data-route-jump="settings">Añade tu nombre para personalizar tu espacio</button>
+          </div>
+        </div>
+
+        <div class="home-quick-actions" aria-label="Acciones rápidas">
+          <div class="agenda-create-actions"><button class="btn primary" data-open-modal="event">＋ Agendar</button><button id="open-routines" type="button" class="btn secondary" data-routine="open">Mi rutina <span aria-hidden="true">↗</span></button></div>
+          <button class="btn secondary" data-open-modal="transaction">Registrar movimiento</button>
+          <button class="btn secondary" data-open-modal="wish">Nuevo deseo</button>
+        </div>
+        <article class="panel today-panel">
+          <div class="panel-head"><div><p class="eyebrow">A tu ritmo</p><h2>Para hoy</h2></div><button class="link-btn" data-route-jump="agenda">Ver agenda</button></div>
+          <div id="home-agenda" class="stack-list"></div>
+        </article>
+      </section>
+
+      <section id="page-wishes" class="page">
+        <div class="section-tools">
+          <div class="chip-row" id="wish-filters"></div>
+          <button class="btn primary" data-open-modal="wish">＋ Nuevo deseo</button>
+        </div>
+        <div class="progress-panel panel">
+          <div><p class="eyebrow">Tu avance</p><strong id="wish-progress-label">0 de 0 logrados</strong></div>
+          <div class="progress-track"><span id="wish-progress-bar"></span></div>
+        </div>
+        <div id="wish-list" class="card-grid"></div>
+      </section>
+
+      <section id="page-agenda" class="page">
+        <div id="agenda-main">
+        <div class="section-tools">
+          <div class="segmented" id="agenda-filter">
+            <button class="active" data-agenda-filter="upcoming">Próximos</button>
+            <button data-agenda-filter="all">Todos</button>
+            <button data-agenda-filter="done">Completados</button>
+          </div>
+          <div class="agenda-create-actions"><button class="btn primary" data-open-modal="event">＋ Agendar</button><button id="open-routines" type="button" class="btn secondary" data-routine="open">Mi rutina <span aria-hidden="true">↗</span></button></div>
+        </div>
+        <div class="agenda-layout">
+          <article class="panel mini-calendar">
+            <div class="calendar-top"><button id="cal-prev" class="icon-btn" aria-label="Mes anterior">‹</button><h2 id="cal-title"></h2><button id="cal-next" class="icon-btn" aria-label="Mes siguiente">›</button></div>
+            <div class="calendar-week"><span>L</span><span>M</span><span>M</span><span>J</span><span>V</span><span>S</span><span>D</span></div>
+            <div id="calendar-grid" class="calendar-grid"></div>
+          </article>
+          <div><p class="subtle agenda-routine-range" id="agenda-routine-range"></p><div id="agenda-list" class="timeline"></div></div>
+        </div>
+        </div>
+        <div id="routine-view" class="hidden"></div>
+      </section>
+
+      <section id="page-finance" class="page">
+        <div class="section-tools">
+          <label class="month-picker">Mes <input id="finance-month" type="month"></label>
+          <button class="btn primary" data-open-modal="transaction">＋ Registrar movimiento</button>
+        </div>
+        <div class="finance-summary">
+          <article class="money-card balance"><span>Balance</span><strong id="finance-balance">$0.00</strong><small>Ingresos menos gastos</small></article>
+          <article class="money-card income"><span>Ingresos</span><strong id="finance-income">$0.00</strong><small id="finance-income-count">0 movimientos</small></article>
+          <article class="money-card expense"><span>Gastos</span><strong id="finance-expense">$0.00</strong><small id="finance-expense-count">0 movimientos</small></article>
+        </div>
+        <div class="finance-sections">
+          <details id="finance-history" class="finance-disclosure">
+            <summary aria-controls="finance-history-body">
+              <svg class="finance-section-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4 3h16v18H4ZM8 8h8m-8 4h8m-8 4h5"/></svg>
+              <span>Ver historial y distribución</span>
+              <svg class="finance-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg>
+            </summary>
+            <div id="finance-history-body" class="finance-disclosure-content finance-history-layout">
+              <section class="finance-detail-section" aria-labelledby="finance-history-title">
+                <div class="panel-head"><div><p class="eyebrow">Historial</p><h2 id="finance-history-title">Movimientos</h2></div><button id="export-finance" class="link-btn">Exportar CSV</button></div>
+                <div id="transaction-list" class="stack-list"></div>
+              </section>
+              <section class="finance-detail-section" aria-labelledby="finance-distribution-title">
+                <div class="panel-head"><div><p class="eyebrow">Distribución</p><h2 id="finance-distribution-title">Gastos por categoría</h2></div></div>
+                <div id="expense-breakdown" class="breakdown"></div>
+              </section>
+            </div>
+          </details>
+          <details id="budgets" class="finance-disclosure planner-panel">
+            <summary aria-controls="budgets-body">
+              <svg class="finance-section-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4 5h16v16H4ZM8 3v4m8-4v4M4 11h16m-12 4h3m2 0h3"/></svg>
+              <span>Presupuestos mensuales</span>
+              <svg class="finance-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg>
+            </summary>
+            <div id="budgets-body" class="finance-disclosure-content"></div>
+          </details>
+          <details id="goals" class="finance-disclosure planner-panel">
+            <summary aria-controls="goals-content">
+              <svg class="finance-section-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/></svg>
+              <span>Metas de ahorro</span>
+              <svg class="finance-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg>
+            </summary>
+            <div id="goals-content" class="finance-disclosure-content">
+              <p class="subtle finance-section-note">Importes registrados por ti, sin conexión bancaria. Apartar ahorro no crea un ingreso ni un gasto.</p>
+              <div id="goals-body"></div>
+            </div>
+          </details>
+        </div>
+      </section>
+
+      <section id="page-journal" class="page" aria-label="Diario privado">
+        <div id="journal-guest" class="panel hidden"><h2>Tu Diario</h2><p class="subtle">Inicia sesión para entrar.</p><button class="btn primary" data-journal-login>Iniciar sesión</button></div>
+        <div id="journal-private">
+          <p id="journal-error" class="journal-error hidden" role="alert"></p>
+          <div id="journal-home" class="journal-home">
+            <figure class="journal-reflection" aria-label="Reflexión del día">
+              <p class="eyebrow">Una reflexión</p>
+              <blockquote id="daily-quote"></blockquote>
+              <figcaption id="daily-author"></figcaption>
+            </figure>
+            <div class="journal-choices">
+              <button id="journal-new" class="journal-choice"><span class="journal-choice-mark" aria-hidden="true">＋</span><span class="journal-choice-title">Nuevo diario</span><span class="journal-choice-arrow" aria-hidden="true">↗</span></button>
+              <button id="journal-continue" class="journal-choice"><span class="journal-choice-mark" aria-hidden="true">↳</span><span class="journal-choice-title">Continuar diario</span><span class="journal-choice-arrow" aria-hidden="true">↗</span></button>
+            </div>
+          </div>
+          <div id="journal-create" class="journal-create hidden">
+            <button class="journal-back" data-journal-home>← Diario</button>
+            <h2>Nuevo diario</h2>
+            <form id="journal-book-form">
+              <label>Nombre<input id="journal-name" required maxlength="120" placeholder="¿Cómo se llama tu diario?" autocomplete="off"></label>
+              <label>Propósito<textarea id="journal-purpose" required maxlength="500" rows="3" placeholder="¿Para qué quieres escribirlo?"></textarea></label>
+              <button class="btn primary" type="submit">Crear y escribir</button>
+            </form>
+          </div>
+          <div id="journal-library" class="hidden">
+            <div class="journal-section-head"><button class="journal-back" data-journal-home>← Diario</button><button id="journal-library-new" class="btn secondary compact">＋ Nuevo diario</button></div>
+            <h2 class="journal-section-title">Tus diarios</h2>
+            <div class="journal-library-tools"><label class="journal-search-label"><span class="sr-only">Buscar un diario por nombre</span><input id="journal-book-search" type="search" placeholder="Buscar un diario…"></label><label><span class="sr-only">Ordenar diarios</span><select id="journal-book-sort"><option value="edited-desc">Última edición</option><option value="edited-asc">Edición más antigua</option><option value="name-asc">Nombre: A–Z</option><option value="name-desc">Nombre: Z–A</option></select></label></div>
+            <div id="journal-books" class="journal-books"></div>
+            <button id="journal-sync" class="journal-sync" type="button">Sincronizar</button>
+          </div>
+          <div id="journal-book" class="hidden">
+            <div class="journal-section-head"><button class="journal-back" data-journal-library>← Tus diarios</button><button id="journal-write" class="btn primary">＋ Escribir</button></div>
+            <h2 id="journal-book-name" class="journal-section-title"></h2><p id="journal-book-purpose" class="journal-purpose"></p>
+            <div id="journal-drafts"></div><div id="journal-conflicts"></div>
+            <details class="journal-entry-filters"><summary>Buscar entradas</summary><div class="journal-filter-fields"><label><span class="sr-only">Buscar en las entradas</span><input id="journal-search" type="search" placeholder="Título o contenido"></label><label><span class="sr-only">Mes de las entradas</span><input id="journal-month" type="month"></label><button id="journal-clear-month" class="btn secondary compact">Todos los meses</button></div></details>
+            <div id="journal-list" class="journal-list"></div>
+          </div>
+          <div id="journal-editor" class="journal-paper hidden">
+            <div class="journal-paper-top">
+              <button id="journal-editor-close" type="button" class="journal-back">← <span id="journal-editor-book"></span></button>
+              <div class="journal-paper-tools"><span id="journal-date" class="journal-meta"></span>
+                <details class="journal-type-control">
+                  <summary aria-label="Tamaño de lectura" title="Tamaño de lectura">Aa</summary>
+                  <div class="journal-type-panel">
+                    <p class="journal-type-heading">Tamaño de lectura</p>
+                    <div class="journal-size-stepper" role="group" aria-label="Tamaño del texto de la entrada">
+                      <button type="button" data-journal-size-step="-1" aria-label="Disminuir tamaño de lectura">−</button>
+                      <span data-journal-size-label aria-live="polite">Normal</span>
+                      <button type="button" data-journal-size-step="1" aria-label="Aumentar tamaño de lectura">+</button>
+                    </div>
+                    <p class="subtle" data-journal-size-status role="status">Solo cambia el texto de la entrada.</p>
+                  </div>
+                </details>
+              </div>
+            </div>
+            <form id="journal-form">
+              <label class="sr-only" for="journal-title">Título de la entrada (opcional)</label><input id="journal-title" class="journal-writing-title" maxlength="200" placeholder="Título (opcional)" autocomplete="off">
+              <label class="sr-only" for="journal-content">Escribe tu entrada</label><textarea id="journal-content" rows="14" maxlength="100000" required placeholder="Empieza aquí…" aria-describedby="journal-save-status"></textarea>
+              <div class="journal-writing-footer"><p id="journal-save-status" role="status" aria-live="polite"></p><button type="submit" class="btn primary">Guardar</button></div>
+              <details class="journal-writing-options"><summary>Más opciones</summary><div class="journal-extra-options"><label>Ánimo<select id="journal-mood"><option value="">Sin especificar</option><option value="feliz">Feliz</option><option value="tranquilo">Tranquilo</option><option value="triste">Triste</option><option value="preocupado">Preocupado</option><option value="cansado">Cansado</option></select></label><button id="journal-discard" class="btn secondary compact" type="button">Descartar borrador</button></div></details>
+            </form>
+          </div>
+          <div id="journal-reader" class="journal-paper hidden">
+            <div class="journal-paper-top">
+              <button id="journal-reader-back" class="journal-back">← Entradas</button>
+              <div class="journal-paper-tools"><p id="journal-reader-meta" class="journal-meta"></p>
+                <details class="journal-type-control">
+                  <summary aria-label="Tamaño de lectura" title="Tamaño de lectura">Aa</summary>
+                  <div class="journal-type-panel">
+                    <p class="journal-type-heading">Tamaño de lectura</p>
+                    <div class="journal-size-stepper" role="group" aria-label="Tamaño del texto de la entrada">
+                      <button type="button" data-journal-size-step="-1" aria-label="Disminuir tamaño de lectura">−</button>
+                      <span data-journal-size-label aria-live="polite">Normal</span>
+                      <button type="button" data-journal-size-step="1" aria-label="Aumentar tamaño de lectura">+</button>
+                    </div>
+                    <p class="subtle" data-journal-size-status role="status">Solo cambia el texto de la entrada.</p>
+                  </div>
+                </details>
+              </div>
+            </div>
+            <h2 id="journal-reader-title"></h2><p id="journal-reader-content" class="journal-text"></p>
+            <div class="journal-writing-footer"><p id="journal-reader-status" class="journal-state"></p><div id="journal-reader-actions" class="button-row"></div></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="page-settings" class="page">
+        <div class="settings-grid">
+          <article class="panel appearance-panel">
+            <p class="eyebrow">Apariencia</p><h2>Hazlo cómodo para ti</h2>
+            <fieldset class="text-preferences"><legend>Tamaño de texto</legend>
+              <div class="size-options">
+                <label><input type="radio" name="text-size" value="normal"><span>Normal</span></label>
+                <label><input type="radio" name="text-size" value="large"><span>Grande</span></label>
+                <label><input type="radio" name="text-size" value="xlarge"><span>Muy grande</span></label>
+              </div>
+            </fieldset>
+            <div class="type-preview"><strong>Un espacio para tus ideas</strong><p>Así verás el texto, las listas y los botones.</p><label>Campo de ejemplo<input readonly value="Hoy avanzo a mi ritmo."></label></div>
+            <p id="appearance-status" class="subtle" role="status">Se guarda en este dispositivo.</p>
+            <label class="theme-setting">Tema<select id="appearance-theme"><option value="light">Claro</option><option value="dark">Oscuro</option></select></label>
+          </article>
+          <article class="panel profile-panel">
+            <p class="eyebrow">Mi perfil</p>
+            <div class="profile-heading"><span id="profile-avatar" class="profile-avatar" aria-hidden="true">✦</span><h2 id="profile-heading">Tu espacio</h2></div>
+            <p id="profile-email" class="subtle"></p>
+            <form id="profile-form" class="form-grid hidden">
+              <label>Nombre de usuario<input id="profile-name" type="text" autocomplete="nickname" minlength="2" maxlength="40" required aria-describedby="profile-help"></label>
+              <p id="profile-help" class="subtle">Tu nombre o apodo para los saludos. Seguirás entrando con tu correo.</p>
+              <button id="profile-save" class="btn primary" type="submit">Guardar nombre</button>
+              <p id="profile-feedback" class="subtle" role="status" aria-live="polite"></p>
+            </form>
+            <p id="profile-local-note" class="subtle">Inicia sesión para guardar tu nombre en tu cuenta.</p>
+          </article>
+          <article class="panel">
+            <p class="eyebrow">Cuenta y sincronización</p>
+            <h2 id="account-heading">Modo local</h2>
+            <p id="account-copy" class="subtle">Puedes usar la aplicación sin conexión. Inicia sesión para ver lo mismo en todos tus dispositivos.</p>
+            <p id="mobile-sync-status" class="subtle" role="status"></p>
+            <div class="button-row">
+              <button id="account-action" class="btn primary">Iniciar sesión</button>
+              <button id="sync-now" class="btn secondary hidden">Sincronizar ahora</button>
+              <button id="sign-out" class="btn danger hidden">Cerrar sesión</button>
+            </div>
+          </article>
+          <article class="panel">
+            <p class="eyebrow">Recordatorios</p>
+            <h2>Notificaciones del dispositivo</h2>
+            <p class="subtle">Te avisaremos mientras la aplicación esté abierta. También puedes añadir cada evento al calendario de tu teléfono para recibir avisos aunque esté cerrada.</p>
+            <button id="enable-notifications" class="btn secondary">Activar notificaciones</button>
+          </article>
+          <article class="panel">
+            <p class="eyebrow">Respaldo</p>
+            <h2>Exporta todos tus datos</h2>
+            <p class="subtle">Descarga un archivo que puedes guardar o importar en otro momento.</p>
+            <div class="button-row"><button id="export-all" class="btn secondary">Descargar respaldo</button><label class="btn secondary file-btn">Importar respaldo<input id="import-all" type="file" accept="application/json"></label></div>
+          </article>
+
+        </div>
+      </section>
+    </main>
+
+    <nav class="bottom-nav" aria-label="Navegación móvil">
+      <button type="button" data-route="finance"><span class="nav-icon" aria-hidden="true">$</span><span class="nav-label">Economía</span></button>
+      <button type="button" data-route="wishes"><span class="nav-icon" aria-hidden="true">✦</span><span class="nav-label">Deseos</span></button>
+      <button type="button" class="active" data-route="home" aria-current="page"><span class="nav-icon" aria-hidden="true">⌂</span><span class="nav-label">Inicio</span></button>
+      <button type="button" data-route="agenda"><span class="nav-icon" aria-hidden="true">□</span><span class="nav-label">Agenda</span></button>
+      <button type="button" data-route="journal"><span class="nav-icon" aria-hidden="true">▤</span><span class="nav-label">Diario</span></button>
+    </nav>
+  </div>
+
+  <dialog id="form-modal" aria-labelledby="modal-title">
+    <form id="modal-form" method="dialog" class="modal-card">
+      <div class="modal-head"><div><p id="modal-kicker" class="eyebrow"></p><h2 id="modal-title"></h2></div><button id="modal-close" class="icon-btn" type="button" aria-label="Cerrar">×</button></div>
+      <div id="modal-fields" class="form-grid"></div>
+      <p id="modal-error" class="form-error" role="alert" tabindex="-1"></p>
+      <button id="modal-draft" type="button" class="btn secondary hidden">Descargar borrador</button>
+      <div class="modal-actions"><button class="btn secondary" type="button" id="modal-cancel">Cancelar</button><button class="btn primary" type="submit">Guardar</button></div>
+    </form>
+  </dialog>
+
+  <script src="config.js"></script>
+  <script src="vendor/supabase-2.57.4.min.js" crossorigin="anonymous"></script>
+  <script src="journal-store.js"></script>
+  <script src="journal.js"></script>
+  <script src="welcome-verses.js"></script>
+  <script src="welcome.js"></script>
+  <script src="planner-core.js"></script>
+  <script src="planner-store.js"></script>
+  <script src="routine-core.js"></script>
+  <script src="routine-ui.js"></script>
+  <script src="planner.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
